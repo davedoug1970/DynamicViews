@@ -27,8 +27,8 @@ struct ButtonView: View {
             .onChanged { gesture in
               self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
             }
-            .onEnded { value in
-              self.DragOffset = CGSize(width: value.translation.width + self.NewDragOffset.width, height: value.translation.height + self.NewDragOffset.height)
+            .onEnded { gesture in
+              self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
               self.NewDragOffset = self.DragOffset
             }
         ) //: GESTURE
