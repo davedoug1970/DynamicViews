@@ -12,6 +12,8 @@ struct ButtonView: View {
   @State var OffsetWidth: Double
   @State var ButtonWidth: Double
   @State var ButtonColor: Color
+  @State var Name: String
+  @State var RemoveFunc: (String) -> Void
   @State var DragOffset: CGSize = .zero
   @State var NewDragOffset: CGSize = .zero
   
@@ -31,12 +33,20 @@ struct ButtonView: View {
               self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
               self.NewDragOffset = self.DragOffset
             }
-        ) //: GESTURE
+        ) //: DRAG GESTURE
+        .gesture(
+          TapGesture()
+            .onEnded { _ in
+              RemoveFunc(Name)
+            }
+        ) //: TAP GESTURE
     }
 }
 
+
+
 struct ButtonView_Previews: PreviewProvider {
     static var previews: some View {
-      ButtonView(Location: CGPoint(x: 50, y: 50), OffsetWidth: 100, ButtonWidth: 60, ButtonColor: .blue)
+      ButtonView(Location: CGPoint(x: 50, y: 50), OffsetWidth: 100, ButtonWidth: 60, ButtonColor: .blue, Name: "test", RemoveFunc: { (name: String) -> Void in print(name) })
     }
 }

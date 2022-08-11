@@ -24,7 +24,7 @@ struct ContentView: View {
             .fill(.white.opacity(0.01))
           
           ForEach(myViews) { myView in
-            ButtonView(Location: myView.position, OffsetWidth: geometry.size.width, ButtonWidth: .random(in: 20...100), ButtonColor: Color.random)
+            ButtonView(Location: myView.position, OffsetWidth: geometry.size.width, ButtonWidth: .random(in: 20...100), ButtonColor: Color.random, Name: myView.name, RemoveFunc: removeFromViews)
           }
         }
         .gesture(
@@ -34,6 +34,10 @@ struct ContentView: View {
         )
       }
     }
+  }
+  
+  func removeFromViews(name: String) {
+    myViews.remove(at: myViews.firstIndex(where: { $0.name == name })!)
   }
   
   func randomString(length: Int) -> String {
