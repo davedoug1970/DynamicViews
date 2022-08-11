@@ -12,6 +12,8 @@ struct ButtonView: View {
   @State var OffsetWidth: Double
   @State var ButtonWidth: Double
   @State var ButtonColor: Color
+  @State var DragOffset: CGSize = .zero
+  @State var NewDragOffset: CGSize = .zero
   
     var body: some View {
       Circle()
@@ -19,6 +21,17 @@ struct ButtonView: View {
         .position(Location)
         .offset(x: (OffsetWidth/2 * -1) + (ButtonWidth/2) , y:0)
         .frame(width: ButtonWidth)
+        .offset(x: self.DragOffset.width, y: self.DragOffset.height)
+        .gesture(
+          DragGesture()
+            .onChanged { gesture in
+              self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
+            }
+            .onEnded { value in
+              self.DragOffset = CGSize(width: value.translation.width + self.NewDragOffset.width, height: value.translation.height + self.NewDragOffset.height)
+              self.NewDragOffset = self.DragOffset
+            }
+        ) //: GESTURE
     }
 }
 
