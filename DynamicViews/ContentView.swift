@@ -29,7 +29,7 @@ struct ContentView: View {
         }
         .gesture(
           DragGesture(minimumDistance: 0).onEnded({ (value) in
-            myViews.append(myObject(name:randomString(length: 8), position: value.location))
+            myViews.append(myObject(name:String.random(length: 8), position: value.location))
           })
         )
       }
@@ -38,11 +38,6 @@ struct ContentView: View {
   
   func removeFromViews(name: String) {
     myViews.remove(at: myViews.firstIndex(where: { $0.name == name })!)
-  }
-  
-  func randomString(length: Int) -> String {
-    let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    return String((0..<length).map{ _ in letters.randomElement()! })
   }
 }
 

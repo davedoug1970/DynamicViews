@@ -14,16 +14,19 @@ struct ButtonView: View {
   @State var ButtonColor: Color
   @State var Name: String
   @State var RemoveFunc: (String) -> Void
-  @State var DragOffset: CGSize = .zero
-  @State var NewDragOffset: CGSize = .zero
+  @State private var DragOffset: CGSize = .zero
+  @State private var NewDragOffset: CGSize = .zero
+  @State private var isAnimating: Bool = false
   
     var body: some View {
       Circle()
         .fill(ButtonColor)
         .position(Location)
         .offset(x: (OffsetWidth/2 * -1) + (ButtonWidth/2) , y:0)
-        .frame(width: ButtonWidth)
+        .frame(width: isAnimating ? ButtonWidth + 10 : ButtonWidth)
         .offset(x: self.DragOffset.width, y: self.DragOffset.height)
+        .opacity(isAnimating ? 0 : 1)
+        .animation(.easeOut(duration: 0.2), value: isAnimating)
         .gesture(
           DragGesture()
             .onChanged { gesture in
@@ -37,7 +40,10 @@ struct ButtonView: View {
         .gesture(
           TapGesture()
             .onEnded { _ in
-              RemoveFunc(Name)
+              isAnimating = true
+              DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                RemoveFunc(Name)
+              }
             }
         ) //: TAP GESTURE
     }
