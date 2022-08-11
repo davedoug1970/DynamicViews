@@ -5,7 +5,7 @@
 //  Created by David Douglas on 8/10/22.
 //
 
-import SwiftUI
+import SwiftUI 
 
 @main
 struct DynamicViewsApp: App {
