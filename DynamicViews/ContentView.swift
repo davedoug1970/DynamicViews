@@ -24,18 +24,12 @@ struct ContentView: View {
             .fill(.white.opacity(0.01))
           
           ForEach(myViews) { myView in
-            Circle()
-              .fill(.red)
-              .position(myView.position)
-              .offset(x: (geometry.size.width/2 * -1) + 25 , y:0)
-              .frame(width: 50)
+            ButtonView(Location: myView.position, OffsetWidth: geometry.size.width, ButtonWidth: .random(in: 20...100), ButtonColor: Color.random)
           }
         }
         .gesture(
           DragGesture(minimumDistance: 0).onEnded({ (value) in
             myViews.append(myObject(name:randomString(length: 8), position: value.location))
-            print(geometry.size.width)
-            print(geometry.size.height)
           })
         )
       }
