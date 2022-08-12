@@ -18,41 +18,39 @@ struct ButtonView: View {
   @State private var NewDragOffset: CGSize = .zero
   @State private var isAnimating: Bool = false
   
-    var body: some View {
-      Circle()
-        .fill(ButtonColor)
-        .position(Location)
-        .offset(x: (OffsetWidth/2 * -1) + (ButtonWidth/2) , y:0)
-        .frame(width: isAnimating ? ButtonWidth + 10 : ButtonWidth)
-        .offset(x: self.DragOffset.width, y: self.DragOffset.height)
-        .opacity(isAnimating ? 0 : 1)
-        .animation(.easeOut(duration: 0.2), value: isAnimating)
-        .gesture(
-          DragGesture()
-            .onChanged { gesture in
-              self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
+  var body: some View {
+    Circle()
+      .fill(ButtonColor)
+      .position(Location)
+      .offset(x: (OffsetWidth/2 * -1) + (ButtonWidth/2) , y:0)
+      .frame(width: isAnimating ? ButtonWidth + 10 : ButtonWidth)
+      .offset(x: self.DragOffset.width, y: self.DragOffset.height)
+      .opacity(isAnimating ? 0 : 1)
+      .animation(.easeOut(duration: 0.2), value: isAnimating)
+      .gesture(
+        DragGesture()
+          .onChanged { gesture in
+            self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
+          }
+          .onEnded { gesture in
+            self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
+            self.NewDragOffset = self.DragOffset
+          }
+      ) //: DRAG GESTURE
+      .gesture(
+        TapGesture()
+          .onEnded { _ in
+            isAnimating = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+              RemoveFunc(Name)
             }
-            .onEnded { gesture in
-              self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
-              self.NewDragOffset = self.DragOffset
-            }
-        ) //: DRAG GESTURE
-        .gesture(
-          TapGesture()
-            .onEnded { _ in
-              isAnimating = true
-              DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                RemoveFunc(Name)
-              }
-            }
-        ) //: TAP GESTURE
-    }
+          }
+      ) //: TAP GESTURE
+  }
 }
 
-
-
 struct ButtonView_Previews: PreviewProvider {
-    static var previews: some View {
-      ButtonView(Location: CGPoint(x: 50, y: 50), OffsetWidth: 100, ButtonWidth: 60, ButtonColor: .blue, Name: "test", RemoveFunc: { (name: String) -> Void in print(name) })
-    }
+  static var previews: some View {
+    ButtonView(Location: CGPoint(x: 50, y: 50), OffsetWidth: 100, ButtonWidth: 60, ButtonColor: .blue, Name: "test", RemoveFunc: { (name: String) -> Void in print(name) })
+  }
 }

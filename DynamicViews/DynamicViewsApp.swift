@@ -9,9 +9,9 @@ import SwiftUI
 
 @main
 struct DynamicViewsApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
     }
+  }
 }
