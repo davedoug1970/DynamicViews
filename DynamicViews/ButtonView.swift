@@ -8,49 +8,54 @@
 import SwiftUI
 
 struct ButtonView: View {
-  @State var Location: CGPoint
-  @State var OffsetWidth: Double
-  @State var ButtonWidth: Double
-  @State var ButtonColor: Color
-  @State var Name: String
-  @State var RemoveFunc: (String) -> Void
-  @State private var DragOffset: CGSize = .zero
-  @State private var NewDragOffset: CGSize = .zero
+  @State var location: CGPoint
+  @State var buttonWidth: Double
+  @State var buttonColor: Color
+  @State var name: String
+  @State var removeFunc: (String) -> Void
   @State private var isAnimating: Bool = false
+  @State private var newLocation: CGPoint = .zero
   
   var body: some View {
-    Circle()
-      .fill(ButtonColor)
-      .position(Location)
-      .offset(x: (OffsetWidth/2 * -1) + (ButtonWidth/2) , y:0)
-      .frame(width: isAnimating ? ButtonWidth + 10 : ButtonWidth)
-      .offset(x: self.DragOffset.width, y: self.DragOffset.height)
-      .opacity(isAnimating ? 0 : 1)
-      .animation(.easeOut(duration: 0.2), value: isAnimating)
-      .gesture(
-        DragGesture()
-          .onChanged { gesture in
-            self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
-          }
-          .onEnded { gesture in
-            self.DragOffset = CGSize(width: gesture.translation.width + self.NewDragOffset.width, height: gesture.translation.height + self.NewDragOffset.height)
-            self.NewDragOffset = self.DragOffset
-          }
-      ) //: DRAG GESTURE
-      .gesture(
-        TapGesture()
-          .onEnded { _ in
-            isAnimating = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-              RemoveFunc(Name)
+    ZStack {
+      Circle()
+        .fill(buttonColor)
+        .position(x: location.x, y: location.y)
+        .frame(width: isAnimating ? buttonWidth + 10 : buttonWidth)
+        .opacity(isAnimating ? 0 : 1)
+        .animation(.easeOut(duration: 0.2), value: isAnimating)
+        .gesture(
+          DragGesture()
+            .onChanged { gesture in
+              if (newLocation == .zero)
+              {
+                newLocation = location
+              }
+              
+              location = CGPoint(x: gesture.translation.width + newLocation.x,
+                                 y: gesture.translation.height + newLocation.y)
             }
-          }
-      ) //: TAP GESTURE
+            .onEnded { gesture in
+              location = CGPoint(x: gesture.translation.width + newLocation.x,
+                                 y: gesture.translation.height + newLocation.y)
+              newLocation = location
+            }
+        ) //: DRAG GESTURE
+        .gesture(
+          TapGesture()
+            .onEnded { _ in
+              isAnimating = true
+              DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                removeFunc(name)
+              }
+            }
+        ) //: TAP GESTURE
+    }
   }
 }
 
 struct ButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    ButtonView(Location: CGPoint(x: 50, y: 50), OffsetWidth: 100, ButtonWidth: 60, ButtonColor: .blue, Name: "test", RemoveFunc: { (name: String) -> Void in print(name) })
+    ButtonView(location: CGPoint(x: 50, y: 50), buttonWidth: 60, buttonColor: .blue, name: "test", removeFunc: { (name: String) -> Void in print(name) })
   }
 }

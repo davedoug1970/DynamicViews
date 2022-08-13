@@ -24,7 +24,11 @@ struct ContentView: View {
             .fill(.white.opacity(0.01))
           
           ForEach(myViews) { myView in
-            ButtonView(Location: myView.position, OffsetWidth: geometry.size.width, ButtonWidth: .random(in: 20...100), ButtonColor: Color.random, Name: myView.name, RemoveFunc: removeFromViews)
+            let newButtonWidth = Double.random(in: 20...100)
+            let positionXOffset = (geometry.size.width/2 * -1.0) + (newButtonWidth/2)
+            let position = CGPoint(x: myView.position.x + positionXOffset, y: myView.position.y)
+            
+            ButtonView(location: position, buttonWidth: newButtonWidth, buttonColor: Color.random, name: myView.name, removeFunc: removeFromViews)
           }
         }
         .gesture(
